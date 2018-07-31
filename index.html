@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Pest Mock</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            color: #000;
+            padding-bottom: 235px;
+        }
+
+        .header {
+            background-color: lightsalmon;
+            padding: 2em 1em;
+        }
+        .footer {
+            background-color: lightsalmon;
+            padding: 5em 1em;
+        }
+
+        .options {
+            background-color: lightblue;
+            padding: 1em;
+        }
+
+        .option {
+            background-color: lightcyan;
+        }
+
+        .option h2 {
+            margin-left: 1em;
+            padding-top: 1em;
+            margin-bottom: 0;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+        }
+
+        .choice {
+            display: flex;
+            background-color: lightgoldenrodyellow;
+            margin: 1em;
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            flex-wrap: nowrap;
+            flex: 0 0 auto; 
+        }
+        .choice[data-value=true] {
+            background-color: lightgreen;
+        }
+        .results {
+            background-color: lavender;
+            width: 100%;
+            position: relative;
+        }
+        .pods {
+            display: flex;
+            flex-direction:row;
+            flex-wrap: wrap
+        }
+        .pod {
+            display: flex;
+            background-color: lightgoldenrodyellow;
+            margin: 1em;
+            width: 200px;
+            height: 200px;
+            flex: 0 0 auto; 
+        }
+
+        @media screen and (max-width: 480px) {
+            .results {
+                position: relative;
+            }
+            .pods {
+                height: inherit;
+                flex-wrap: wrap;
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch;
+                -ms-overflow-style: -ms-autohiding-scrollbar;
+            }
+            .pod {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+    <script>
+        var state = {
+            currentOption: 0
+        }
+
+        var init = function() {
+            [].forEach.call(document.querySelectorAll('.choice'), function (a) {
+                a.addEventListener('click', function (e) {
+                    // code here
+                    selectChoice(e);
+                }, false );
+            });
+            [].forEach.call(document.querySelectorAll('.option'), function (o) {
+                o.style.display = "none";
+            });
+            document.querySelector('.option').style.display = "inherit";
+        }
+
+        var updateOptionVisiblity = function() {
+            [].forEach.call(document.querySelectorAll('.option'), function ( o ) {
+                o.style.display = "inherit";
+                if(parseInt(o.getAttribute('data-option')) > state.currentOption + 1) {
+                    o.style.display = "none";
+                }
+            });
+        }
+
+        var selectChoice = function(e) {
+            
+            state.currentOption = parseInt(e.target.parentElement.parentElement.getAttribute('data-option'));
+            var currentVal = e.target.getAttribute('data-value');
+
+            // reset all choices inside option
+            [].forEach.call(e.target.parentElement.querySelectorAll('.choice'), function (c) {
+                c.setAttribute('data-value', 'false');
+            });
+
+            // set current choice
+            if(currentVal == "true") {
+                state.currentOption = state.currentOption >= 0 ? state.currentOption - 1 : 0;
+                e.target.setAttribute('data-value', 'false');
+            } else {
+                e.target.setAttribute('data-value', 'true');
+            }
+
+            updateOptionVisiblity();
+            var scrollto = getTopOfElement('.option[data-option="' + (state.currentOption + 1) + '"]');
+        }
+
+        var getTopOfElement = function (selector) {
+            const start = window.pageYOffset;
+            const startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
+            var ele = document.querySelector(selector);
+            smoothScrollTo(window.screenX, ele.offsetTop, 500)
+        }
+
+        var smoothScrollTo = function(endX, endY, duration) {
+            var startX = window.scrollX || window.pageXOffset,
+              startY = window.scrollY || window.pageYOffset,
+              distanceX = endX - startX,
+              distanceY = endY - startY,
+              startTime = new Date().getTime();
+          
+            duration = typeof duration !== 'undefined' ? duration : 400;
+          
+            // Easing function
+            var easeInOutQuart = function(time, from, distance, duration) {
+              if ((time /= duration / 2) < 1) return distance / 2 * time * time * time * time + from;
+              return -distance / 2 * ((time -= 2) * time * time * time - 2) + from;
+            };
+          
+            var timer = window.setInterval(function() {
+              var time = new Date().getTime() - startTime,
+                newX = easeInOutQuart(time, startX, distanceX, duration),
+                newY = easeInOutQuart(time, startY, distanceY, duration);
+              if (time >= duration) {
+                window.clearInterval(timer);
+              }
+              window.scrollTo(newX, newY);
+            }, 1000 / 60); // 60 fps
+          };
+
+
+        window.onload = function() {
+            init();
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="header">Header</div>
+
+    <div class="options">
+        <div class="option" data-option="0">
+            <h2>Option 1</h2>
+            <div class="choices">
+                <div class="choice" data-choice="0" data-value="false">Choice 1</div>
+                <div class="choice" data-choice="1" data-value="false">Choice 2</div>
+            </div>
+        </div>
+        <div class="option" data-option="1">
+            <h2>Option 2</h2>
+            <div class="choices">
+                <div class="choice" data-choice="2" data-value="false">Choice 1</div>
+                <div class="choice" data-choice="3" data-value="false">Choice 2</div>
+                <div class="choice" data-choice="4" data-value="false">Choice 3</div>
+            </div>
+        </div>
+        <div class="option" data-option="2">
+            <h2>Option 3</h2>
+            <div class="choices">
+                <div class="choice" data-choice="5" data-value="false">Choice 1</div>
+                <div class="choice" data-choice="6" data-value="false">Choice 2</div>
+                <div class="choice" data-choice="7" data-value="false">Choice 3</div>
+                <div class="choice" data-choice="8" data-value="false">Choice 4</div>
+            </div>
+        </div>
+        <div class="option" data-option="3">
+            <h2>Option 4</h2>
+            <div class="choices">
+                <div class="choice" data-choice="9"  data-value="false">Choice 1</div>
+                <div class="choice" data-choice="10" data-value="false">Choice 2</div>
+                <div class="choice" data-choice="11" data-value="false">Choice 3</div>
+                <div class="choice" data-choice="12" data-value="false">Choice 4</div>
+                <div class="choice" data-choice="13" data-value="false">Choice 5</div>
+            </div>
+        </div>
+        <div class="option" data-option="4">
+            <h2>Option 5</h2>
+            <div class="choices">
+                <div class="choice" data-choice="14" data-value="false">Choice 1</div>
+                <div class="choice" data-choice="15" data-value="false">Choice 2</div>
+                <div class="choice" data-choice="16" data-value="false">Choice 3</div>
+                <div class="choice" data-choice="17" data-value="false">Choice 4</div>
+                <div class="choice" data-choice="18" data-value="false">Choice 5</div>
+                <div class="choice" data-choice="19" data-value="false">Choice 6</div>
+            </div>
+        </div>
+        <div class="option" data-option="5">
+            <h2>Option 6</h2>
+            <div class="choices">
+                <div class="choice" data-choice="20" data-value="false">Choice 1</div>
+                <div class="choice" data-choice="21" data-value="false">Choice 2</div>
+                <div class="choice" data-choice="22" data-value="false">Choice 3</div>
+                <div class="choice" data-choice="23" data-value="false">Choice 4</div>
+                <div class="choice" data-choice="24" data-value="false">Choice 5</div>
+                <div class="choice" data-choice="25" data-value="false">Choice 6</div>
+                <div class="choice" data-choice="26" data-value="false">Choice 7</div>
+            </div>
+        </div>
+        <div class="option" data-option="6">
+            <h2>Option 7</h2>
+            <div class="choices">
+                <div class="choice" data-choice="27" data-value="false">Choice 1</div>
+                <div class="choice" data-choice="28" data-value="false">Choice 2</div>
+                <div class="choice" data-choice="29" data-value="false">Choice 3</div>
+                <div class="choice" data-choice="30" data-value="false">Choice 4</div>
+                <div class="choice" data-choice="31" data-value="false">Choice 5</div>
+                <div class="choice" data-choice="32" data-value="false">Choice 6</div>
+                <div class="choice" data-choice="33" data-value="false">Choice 7</div>
+                <div class="choice" data-choice="34" data-value="false">Choice 8</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results">
+        <div class="pods">
+            <div class="pod">
+                pod
+            </div>
+            <div class="pod">
+                pod
+            </div>
+            <div class="pod">
+                pod
+            </div>
+            <div class="pod">
+                pod
+            </div>
+            <div class="pod">
+                pod
+            </div>
+            <div class="pod">
+                pod
+            </div>
+            <div class="pod">
+                pod
+            </div>
+            <div class="pod">
+                pod
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer">Footer</div>
+
+</body>
+
+</html>
