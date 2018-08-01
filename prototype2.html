@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>Pest Mock</title>
+    <title>Pest Mock v2</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -23,19 +23,6 @@
             padding: 5em 1em;
         }
 
-
-        .arrow-right {
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 7.5px 0 7.5px 10px;
-            border-color: transparent transparent transparent #000000;
-            top: 60%;
-            right: 11px;
-        }
-
-
         .options {
             background-color: lightblue;
             padding: 1em;
@@ -43,7 +30,6 @@
 
         .option {
             background-color: lightcyan;
-            position: relative;
         }
 
         .option h2 {
@@ -55,7 +41,8 @@
         .choices {
             display: flex;
             flex-direction: row;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
+            max-height: 23vw;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             -ms-overflow-style: -ms-autohiding-scrollbar;
@@ -64,11 +51,13 @@
         .choice {
             display: flex;
             background-color: lightgoldenrodyellow;
-            margin: 1em;
-            width: 100px;
-            height: 100px;
+            margin: 1vw;
+            width: 9vw;
+            height: 9vw;
+
+
             text-align: center;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             flex: 0 0 auto;
         }
 
@@ -91,13 +80,20 @@
         .pod {
             display: flex;
             background-color: lightgoldenrodyellow;
-            margin: 1em;
-            width: 200px;
-            height: 200px;
+            margin: 1.25vw;
+            width: 22vw;
+            height: 22vw;
             flex: 0 0 auto;
         }
-
         @media screen and (max-width: 480px) {
+            .choices {
+                max-height: 58vw;
+            }
+            .choice {
+                margin: 4vw;
+                width: 21vw;
+                height: 21vw;
+            }
             .results {
                 position: relative;
             }
@@ -109,8 +105,9 @@
                 -ms-overflow-style: -ms-autohiding-scrollbar;
             }
             .pod {
-                width: 150px;
-                height: 150px;
+                margin: 5vw;
+                width: 40vw;
+                height: 40vw;
             }
         }
     </style>
@@ -122,6 +119,7 @@
         var init = function () {
             [].forEach.call(document.querySelectorAll('.choice'), function (a) {
                 a.addEventListener('click', function (e) {
+                    // code here
                     selectChoice(e);
                 }, false);
             });
@@ -213,7 +211,6 @@
                 <div class="choice" data-choice="0" data-value="false">Choice 1</div>
                 <div class="choice" data-choice="1" data-value="false">Choice 2</div>
             </div>
-            <div class="arrow-right"></div>
         </div>
         <div class="option" data-option="1">
             <h2>Option 2</h2>
@@ -223,7 +220,6 @@
                 <div class="choice" data-choice="4" data-value="false">Choice 3</div>
                 <div class="choice" data-choice="5" data-value="false">Choice 4</div>
             </div>
-            <div class="arrow-right"></div>
         </div>
         <div class="option" data-option="2">
             <h2>Option 3</h2>
@@ -239,7 +235,6 @@
                 <div class="choice" data-choice="14" data-value="false">Choice 9</div>
                 <div class="choice" data-choice="15" data-value="false">Choice 10</div>
             </div>
-            <div class="arrow-right"></div>
         </div>
         <div class="option" data-option="3">
             <h2>Option 4</h2>
@@ -272,7 +267,6 @@
                 <div class="choice" data-choice="39" data-value="false">Choice 24</div>
                 <div class="choice" data-choice="40" data-value="false">Choice 25</div>
             </div>
-            <div class="arrow-right"></div>
         </div>
         <div class="option" data-option="4">
             <h2>Option 5</h2>
@@ -334,7 +328,6 @@
                 <div class="choice" data-choice="89" data-value="false">Choice 49</div>
                 <div class="choice" data-choice="90" data-value="false">Choice 50</div>
             </div>
-            <div class="arrow-right"></div>
         </div>
     </div>
 
